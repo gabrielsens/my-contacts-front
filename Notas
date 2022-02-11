@@ -1,0 +1,10 @@
+yarn add eslint -D
+
+
+yarn eslint --init
+
+
+
+"editor.codeActionsOnSave": {
+        "source.fixAll": true
+    }
