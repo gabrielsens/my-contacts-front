@@ -1,3 +1,7 @@
+import PageHeader from '../../components/PageHeader';
+
 export default function EditContact() {
-  return 'Edit';
+  return (
+    <PageHeader title="Editar Gabriel Sens" />
+  );
 }
