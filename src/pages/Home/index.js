@@ -6,14 +6,13 @@ import {
 import arrow from '../../assets/images/arrow.svg';
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
-import Loader from '../../components/Loader';
+// import Loader from '../../components/Loader';
 // import Modal from '../../components/Modal';
 
 export default function Home() {
   return (
 
     <Container>
-      <Loader />
       <InputSearchContainer>
         <input type="text" placeholder="Pesquisar pelo Nome..." />
       </InputSearchContainer>
