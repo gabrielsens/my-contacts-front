@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Form, ButtonContainer } from './styles';
 import FormGroup from '../FormGroup';
 import Input from '../Input';
@@ -13,49 +14,84 @@ import Button from '../Button';
 
 export default function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
-  const emailInput = useRef(null);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [category, setCategory] = useState('');
+  const [errors, setErrors] = useState([]);
+  // const emailInput = useRef(null);
 
-  function handleClick() {
-    console.log(emailInput.current.value);
-  }
+  // function handleClick() {
+  //   console.log(emailInput.current.value);
+  // }
 
   // Two way databinding
+  function handleNameChange(event) {
+    setName(event.target.value);
+    if (!event.target.value) {
+      setErrors((prevState) => [
+        ...prevState,
+        { field: 'name', message: 'Nome é obrigatório.' },
+      ]);
+    } else {
+      setErrors((prevState) => prevState.filter((error) => error.field !== 'name'));
+    }
+  }
+
+  console.log(errors);
+
+  function handleEmailChange(event) {
+    setEmail(event.target.value);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log({
+    name, email, phone, category,
+  });
+  }
 
   return (
-    <Form>
-      <button type="button" onClick={handleClick}>
-        Loga Email inpit
-      </button>
+    // eslint-disable-next-line react/jsx-no-bind
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Input
           type="text"
           value={name}
           placeholder="Nome"
-          onChange={(event) => { console.log('digitou'); return setName(event.target.value); }}
-          onFocus={() => console.log('entrou no input')}
-          onBlur={() => console.log('saiu do input')}
+          onChange={handleNameChange}
+          // onFocus={() => console.log('entrou no input')}
+          // onBlur={() => console.log('saiu do input')}
         />
       </FormGroup>
 
-      <FormGroup
-        error="O formato do Email é inválido"
-      >
+      <FormGroup>
         <Input
           type="text"
-          defaultValue="gabriel@hotmail.com"
+          // defaultValue="gabriel@hotmail.com"
           placeholder="E-mail"
-          ref={emailInput}
-          onChange={(event) => console.log('Digitou', event.target.value)}
+          // ref={emailInput}
+          value={email}
+          onChange={handleEmailChange}
         />
       </FormGroup>
 
       <FormGroup>
-        <Input type="text" placeholder="Telefone" />
+        <Input
+          type="text"
+          placeholder="Telefone"
+          value={phone}
+          onChange={(event) => setPhone(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Select>
-          <option>123</option>
+        <Select
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          <option value="">Categoria</option>
+          <option value="instagram">Instagram</option>
+          <option value="discordy">Discordy</option>
         </Select>
       </FormGroup>
 
