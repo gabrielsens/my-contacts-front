@@ -88,10 +88,18 @@ export default function Home() {
     </Container>
   );
 }
-fetch('/')
+fetch('http://localhost:3001/contacts')
   .then((response) => {
     console.log('response', response);
   })
   .catch((error) => {
     console.log('error', error);
   });
+
+// SOP -> Same Origin Policy -> Politica de mesma origem - exclusivamente no navegador
+
+// Origem: protocolo: //domínio: porta
+// Saída: http://localhost:3000 - onde a requisição está chegando
+// Destino: http://localhost:3000 - onde a requisição está chegando
+
+// CORS -> Cross-Origin Resource Sharing -> compartilhamento de recursos entre origens cruzadas
