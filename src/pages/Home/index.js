@@ -88,3 +88,10 @@ export default function Home() {
     </Container>
   );
 }
+fetch('/')
+  .then((response) => {
+    console.log('response', response);
+  })
+  .catch((error) => {
+    console.log('error', error);
+  });
