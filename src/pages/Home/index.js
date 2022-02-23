@@ -7,13 +7,17 @@ import {
 import arrow from '../../assets/images/arrow.svg';
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
-// import Loader from '../../components/Loader';
+
+import Loader from '../../components/Loader';
 // import Modal from '../../components/Modal';
+
+import delay from '../../utils/delay';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsloading] = useState(true);
 
   const filteredContacts = useMemo(
   () => contacts.filter((contact) => (
@@ -22,14 +26,23 @@ export default function Home() {
   );
 
   useEffect(() => {
-    fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`)
-    .then(async (response) => {
-      const json = await response.json();
-      setContacts(json);
-    })
-    .catch((error) => {
-      console.log('error', error);
-    });
+    async function loadContacts() {
+      try {
+        setIsloading(true);
+
+        const response = await fetch(`http://localhost:3001/contacts?orderBy=${orderBy}`);
+        await delay(500);
+
+        const json = await response.json();
+        setContacts(json);
+      } catch (error) {
+          console.log('error', error);
+      } finally {
+        setIsloading(false);
+      }
+    }
+
+    loadContacts();
   }, [orderBy]);
 
   function handleToggleOrderBy() {
@@ -43,6 +56,7 @@ export default function Home() {
   return (
 
     <Container>
+      <Loader isLoading={isLoading} />
       <InputSearchContainer>
         <input value={searchTerm} type="text" placeholder="Pesquisar pelo Nome..." onChange={handleChangeSearchTerm} />
       </InputSearchContainer>
