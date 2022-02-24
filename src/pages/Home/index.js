@@ -12,6 +12,7 @@ import Loader from '../../components/Loader';
 // import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/contactsService';
+// import APIError from '../../errors/APIError';
 
 export default function Home() {
   const [contacts, setContacts] = useState([]);
