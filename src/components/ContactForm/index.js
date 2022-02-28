@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import isEmailValid from '../../utils/isEmailValid';
 import formatPhone from '../../utils/formatPhone';
@@ -13,6 +13,10 @@ import Input from '../Input';
 import Select from '../Select';
 import Button from '../Button';
 
+import CategoryService from '../../services/CategoryService';
+
+// import Loader from '../Loader';
+
 // Controlled Components -> são campos onde a responsabilidade de controlar o
 // valor é do react gerenciar os campos
 // Uncontrolled components -> não é do react, é da dom
@@ -22,8 +26,9 @@ export default function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [category, setCategory] = useState('');
-
+  const [categoryId, setCategoryId] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const {
     errors, setError, removeError, getErrorMessageByFieldName,
   } = useErrors();
@@ -33,6 +38,19 @@ export default function ContactForm({ buttonLabel }) {
   // function handleClick() {
   //   console.log(emailInput.current.value);
   // }
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        setIsLoadingCategories(true);
+        const categoryList = await CategoryService.listCategories();
+        setCategories(categoryList);
+      } catch {} finally {
+        setIsLoadingCategories(false);
+      }
+    }
+    loadCategories();
+  }, []);
 
   // Two way databinding
   function handleNameChange(event) {
@@ -68,6 +86,7 @@ export default function ContactForm({ buttonLabel }) {
   return (
     // eslint-disable-next-line react/jsx-no-bind
     <Form onSubmit={handleSubmit} noValidate>
+      {/* <Loader isLoading={isLoadingCategories} /> */}
       <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           error={getErrorMessageByFieldName('name')}
@@ -102,14 +121,16 @@ export default function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup isLoading={isLoadingCategories}>
         <Select
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
+          value={categoryId}
+          onChange={(event) => setCategoryId(event.target.value)}
+          disabled={isLoadingCategories}
         >
-          <option value="">Categoria</option>
-          <option value="instagram">Instagram</option>
-          <option value="discordy">Discordy</option>
+          <option value="">Sem Categoria</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
         </Select>
       </FormGroup>
 
