@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import Spinner from '../Spinner';
 import { Container } from './styles';
 
 export default function FormGroup({ children, error, isLoading }) {
@@ -8,8 +9,10 @@ export default function FormGroup({ children, error, isLoading }) {
         {children}
 
         {isLoading && (
-        <div className="loader" />
-)}
+          <div className="loader">
+            <Spinner size={16} />
+          </div>
+        )}
       </div>
       { error && <small>{error}</small> }
     </Container>
